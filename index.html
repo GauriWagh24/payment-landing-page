@@ -1,67 +1,347 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>My Payment Integration Project</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --ink: #1a1025;
+            --purple: #4B2E83;
+            --purple-light: #6b47b8;
+            --gold: #c9a84c;
+            --cream: #f9f5ee;
+            --cream-dark: #f0e9d8;
+            --muted: #7a6e8a;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            padding: 40px;
-            max-width: 800px;
-            margin: auto;
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--cream);
+            color: var(--ink);
+            min-height: 100vh;
         }
-        h1, h2 {
-            color: #4B2E83;
+
+        /* Decorative background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: 
+                radial-gradient(ellipse at 10% 20%, rgba(75,46,131,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 80%, rgba(201,168,76,0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
         }
-        hr {
-            margin: 30px 0;
+
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 60px 40px 80px;
+        }
+
+        /* Header */
+        .site-header {
+            border-bottom: 1px solid rgba(75,46,131,0.15);
+            padding-bottom: 40px;
+            margin-bottom: 56px;
+            animation: fadeUp 0.7s ease both;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--purple);
+            color: var(--white);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 5px 14px;
+            border-radius: 100px;
+            margin-bottom: 20px;
+        }
+
+        .badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            line-height: 1.15;
+            color: var(--ink);
+            margin-bottom: 16px;
+        }
+
+        h1 em {
+            color: var(--purple);
+            font-style: italic;
+        }
+
+        .header-desc {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--muted);
+            max-width: 520px;
+            font-weight: 300;
+        }
+
+        /* Cashfree tag */
+        .powered-by {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 8px 16px;
+            background: var(--white);
+            border: 1px solid var(--cream-dark);
+            border-radius: 8px;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .powered-by .icon {
+            font-size: 16px;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 40px;
+            padding: 32px 36px;
+            background: var(--white);
+            border-radius: 16px;
+            border: 1px solid var(--cream-dark);
+            box-shadow: 0 2px 16px rgba(75,46,131,0.05);
+            animation: fadeUp 0.6s ease both;
+            transition: box-shadow 0.25s ease, transform 0.25s ease;
+        }
+
+        .section:hover {
+            box-shadow: 0 6px 28px rgba(75,46,131,0.1);
+            transform: translateY(-2px);
+        }
+
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.2s; }
+        .section:nth-child(4) { animation-delay: 0.3s; }
+        .section:nth-child(5) { animation-delay: 0.4s; }
+        .section:nth-child(6) { animation-delay: 0.5s; }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .section-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--purple), var(--purple-light));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.25rem;
+            color: var(--ink);
+            font-weight: 400;
+        }
+
+        .section p {
+            font-size: 15px;
+            line-height: 1.75;
+            color: var(--muted);
+            font-weight: 300;
+        }
+
+        /* Contact section special */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 4px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 18px;
+            background: var(--cream);
+            border-radius: 10px;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .contact-item:hover {
+            background: var(--cream-dark);
+        }
+
+        .contact-item .ci-icon {
+            font-size: 18px;
+        }
+
+        .contact-item .ci-label {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: block;
+        }
+
+        .contact-item .ci-value {
+            font-size: 13px;
+            color: var(--ink);
+            font-weight: 500;
+            display: block;
+        }
+
+        /* Divider accent */
+        .accent-bar {
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--purple), var(--gold));
+            border-radius: 2px;
+            margin-bottom: 14px;
+        }
+
+        /* Footer */
+        .site-footer {
+            margin-top: 56px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--muted);
+            opacity: 0.7;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 560px) {
+            .page-wrapper { padding: 36px 20px 60px; }
+            .section { padding: 24px 22px; }
+            .contact-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
+    <div class="page-wrapper">
 
-    <h1>My Payment Integration Project</h1>
-    <p>
-        This platform is created to demonstrate secure online payment integration 
-        using Cashfree Payment Gateway.
-    </p>
+        <!-- Header -->
+        <header class="site-header">
+            <div class="badge">Secure Payments</div>
+            <h1>My <em>Payment</em><br>Integration Project</h1>
+            <p class="header-desc">
+                This platform demonstrates secure online payment integration using industry-leading infrastructure — built for reliability and trust.
+            </p>
+            <div class="powered-by">
+                <span class="icon">🔒</span>
+                Powered by Cashfree Payment Gateway
+            </div>
+        </header>
 
-    <hr>
+        <!-- About -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">💼</div>
+                <h2>About Us</h2>
+            </div>
+            <div class="accent-bar"></div>
+            <p>We provide digital services and software development solutions — crafting tailored technology to help businesses grow and operate seamlessly in a connected world.</p>
+        </div>
 
-    <h2>About Us</h2>
-    <p>
-        We provide digital services and software development solutions.
-    </p>
+        <!-- Contact -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">✉️</div>
+                <h2>Contact Us</h2>
+            </div>
+            <div class="accent-bar"></div>
+            <div class="contact-grid">
+                <a class="contact-item" href="mailto:gauriwagh2001@gmail.com">
+                    <span class="ci-icon">📧</span>
+                    <span>
+                        <span class="ci-label">Email</span>
+                        <span class="ci-value">gauriwagh2001@gmail.com</span>
+                    </span>
+                </a>
+                <a class="contact-item" href="tel:+9195884744434">
+                    <span class="ci-icon">📞</span>
+                    <span>
+                        <span class="ci-label">Phone</span>
+                        <span class="ci-value">+91-95884744434</span>
+                    </span>
+                </a>
+            </div>
+        </div>
 
-    <hr>
+        <!-- Refund -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">↩️</div>
+                <h2>Refund Policy</h2>
+            </div>
+            <div class="accent-bar"></div>
+            <p>Refunds will be processed within <strong style="color:var(--purple);font-weight:600;">7 working days</strong> if applicable, as per our service agreement. We are committed to resolving all refund requests promptly and fairly.</p>
+        </div>
 
-    <h2>Contact Us</h2>
-    <p>Email: gauriwagh2001@gmail.com</p>
-    <p>Phone: +91-95884744434 </p>
+        <!-- Privacy -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">🛡️</div>
+                <h2>Privacy Policy</h2>
+            </div>
+            <div class="accent-bar"></div>
+            <p>We respect your privacy completely. Your personal data is never shared with third parties without your explicit consent. All information is handled with strict confidentiality and in compliance with applicable regulations.</p>
+        </div>
 
-    <hr>
+        <!-- Terms -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">📋</div>
+                <h2>Terms & Conditions</h2>
+            </div>
+            <div class="accent-bar"></div>
+            <p>By using our services, you acknowledge and agree to our policies and terms of use. We encourage all users to read these carefully to ensure a smooth and informed experience with our platform.</p>
+        </div>
 
-    <h2>Refund Policy</h2>
-    <p>
-        Refunds will be processed within 7 working days 
-        if applicable as per our service agreement.
-    </p>
+        <footer class="site-footer">
+            &copy; 2025 My Payment Integration Project &nbsp;·&nbsp; All rights reserved
+        </footer>
 
-    <hr>
-
-    <h2>Privacy Policy</h2>
-    <p>
-        We respect your privacy and do not share personal data 
-        with third parties without consent.
-    </p>
-
-    <hr>
-
-    <h2>Terms & Conditions</h2>
-    <p>
-        By using our services, you agree to our policies and terms.
-    </p>
-
+    </div>
 </body>
 </html>
